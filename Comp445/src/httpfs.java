@@ -114,11 +114,6 @@ private static char readCharacter() throws IOException {
 	 * Default: C:\\Core\\WorkBenches\\Java WorkBench\\Comp445\\StorageDirectory
 	 */
 		
-	if(userCommandLine.contains("-v"))
-	{
-		System.out.println("Prints debugging messages");	
-	}
-		
 	if(userCommandLine.contains("-p"))
 	{	// Setting the port number with the value preceding the command line with the index "-p";
 		// Since value is a string, we need to convert it into integer
@@ -131,8 +126,6 @@ private static char readCharacter() throws IOException {
 		System.out.println("Specifies the directory that the server will use to read/write requested files.\n Default:C:\\Core\\WorkBenches\\Java WorkBench\\Comp445\\StorageDirectory\n New: "+ userCommandLine.get(userCommandLine.indexOf("-d")+1));
 		fileDir= new File (userCommandLine.get(userCommandLine.indexOf("-d")+1));
 	}
-		
-		
 }
 	
 	private void setConnection() throws Exception {
@@ -144,7 +137,11 @@ private static char readCharacter() throws IOException {
 	while (true)
 	{
 		clientSocket=serverSocket.accept();
-		System.out.println("A client connected");
+		
+		if(userCommandLine.contains("-v"))
+		{
+			System.out.println("A client connected");	
+		}
 		
 		String userReq="";
 		String fileName="";
@@ -155,8 +152,10 @@ private static char readCharacter() throws IOException {
 		userReq= line(inStream);
 		userReq=userReq.toLowerCase();
 		
-		System.out.println("Client Request : " + userReq);
-		
+		if(userCommandLine.contains("-v"))
+		{
+			System.out.println("Client Request : " + userReq);	
+		}
 		
 		//CASE 1 (GET)
 		if (userReq.startsWith("get")) 
@@ -183,24 +182,41 @@ private static char readCharacter() throws IOException {
 			
 			// CASE 1.2 GET with file name
 			else 
-			{
-				//creating a new file that has the same directory and command line filename
+			{    
+				// Creating a new file that has the same directory and command line filename
 				File file = new File(fileDir, fileName);
 
 				if ( (!file.exists()) || file.isDirectory() )
 				{
 					outStream.println("ERROR 404: File Not Found!");
 				}
-
 				else
-				{
+				{	//BONUS PART
+					//Content-Disposition and  Content-Type
+					String docName=fileName.substring(0,fileName.lastIndexOf("."));
+					String docType = fileName.substring(fileName.lastIndexOf(".")+1);
+					
+					if(docType.equalsIgnoreCase("txt"))
+					{
+						System.out.println("Content Disposition: data; "+"name="+docName+"; filename="+fileName+";");
+						System.out.println("Content-Type: text/plain"+";");
+						System.out.println("Content-Length: "+file.length()+";");
+					}
+					else
+					{
+						System.out.println("Content Disposition: data; "+"name="+docName+"; filename="+fileName+";");
+						System.out.println("Content-Type: application/"+docType+";");
+						System.out.println("Content-Length: "+file.length()+";");		
+					}	
+					//End of bonus part code
+					
 					outStream.println("Success");
 					FileReader fileReader = new FileReader(file);
 					BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 					String fileLine;
 					while((fileLine = bufferedReader.readLine()) != null)
-					{
+					{   
 						outStream.println(fileLine);
 					}
 					fileReader.close();

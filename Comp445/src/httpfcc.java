@@ -13,9 +13,11 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-public class httpfc {
+public class httpfcc {
 	
 	private final static String SERVER_ADDRESS="localhost";
+	private static String method;
+	private static String fileName;
 	
 	//Buffer Reader instance variables
 	private static BufferedReader bufferedReader;
@@ -262,6 +264,7 @@ public static void main(String[] args) throws Exception {
 		String result=scan.hasNext() ? scan.next(): "";
 		System.out.println(result);
 		scan.close();
+		
 	}
 	
 	//CASE 2 GET filename  

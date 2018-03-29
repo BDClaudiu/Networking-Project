@@ -4,16 +4,15 @@
  * Client Server
  * 
  * Bacisor Claudiu ID: 27735332
- * Marzie Shafiee ID: 
+ * Marzie Shafiee ID:  40016801 
  * 
 */
-
 
 import java.util.*;
 import java.io.*;
 import java.net.*;
 
-public class httpfc {
+public class httpfcc {
 	
 	private final static String SERVER_ADDRESS="localhost";
 	
@@ -102,16 +101,12 @@ public static void main(String[] args) throws Exception {
 	
 	System.out.println("**********Client is Running**********");	
 	ArrayList <String> clientRequestCommandLine = new ArrayList<String>(Arrays.asList(args));
-	
-	
-	
+			
 /*
  * -------------------------------------------------------------------------------------------------------
  * POST and GET methods options  
  * -------------------------------------------------------------------------------------------------------
  */
-	
-	//I WANNNA CHANGE THIS...ITS STUPID!!! to have a if condition for GET and get....POST and post (i did not include Post)
 	
 	//GET request without file name
 	if(clientRequestCommandLine.contains("get") && clientRequestCommandLine.size()==1)
@@ -153,7 +148,7 @@ public static void main(String[] args) throws Exception {
 			}
 		}
 		else
-			System.out.println("Please input a file name followed by the file content");
+			System.out.println("File content required");
 	}	
 	else if(clientRequestCommandLine.contains("post"))
 	{
@@ -169,12 +164,12 @@ public static void main(String[] args) throws Exception {
 			}
 		}
 		else
-			System.out.println("Please input a file name followed by the file content");	
+			System.out.println("File content required");	
 	}
 	else 
 	{
 		System.out.println("Invalid input.Valid inputs are: GET, GET filename, POST filename filecontent. ");
-		System.out.print("System shut down imminent!!");
+		System.out.print("System will shut down !!");
 		System.exit(0);
 	}
 	
@@ -194,18 +189,17 @@ public static void main(String[] args) throws Exception {
 	inStream= new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	outStream= new PrintWriter(clientSocket.getOutputStream());
 	
-	// Clients requests
+	// Clients request
 	System.out.println("Client: "+SERVER_ADDRESS);
+	
 	//CASE 1 GET
 	if(method.equalsIgnoreCase("GET")&& file_name==null)
 	{
 		command=method;
 		outStream.println(command);
 		outStream.flush();
-//		System.out.println("Client issss : "+SERVER_ADDRESS);
 		System.out.println("Sending request " + command +" to server");
 	}	
-	
 	
 	//CASE 2 GET filename
 	if(method.equalsIgnoreCase("GET")&& file_name!=null)
@@ -235,11 +229,13 @@ public static void main(String[] args) throws Exception {
 		{
 			FileReader file_Reader = new FileReader(newFile);
 			BufferedReader buffered_Reader =  new BufferedReader (file_Reader);
+			String line;
 			
-			while(buffered_Reader.readLine() !=null)
+			while((line=buffered_Reader.readLine()) !=null)
 			{
-				outStream.println(buffered_Reader.readLine());	
+				outStream.println(line);	
 			}
+			
 			file_Reader.close();
 			outStream.flush();
 			outStream.close();
@@ -261,6 +257,8 @@ public static void main(String[] args) throws Exception {
 		Scanner scan= new Scanner(inStream).useDelimiter("\\A");
 		String result=scan.hasNext() ? scan.next(): "";
 		System.out.println(result);
+		
+		inStream.close();
 		scan.close();
 	}
 	
@@ -279,14 +277,12 @@ public static void main(String[] args) throws Exception {
 			System.out.println("Content of the requested file: " +file_name);
 			System.out.println("-----------------------------------------------------------------");
 		}
+		
+	
 		while(!EOF())
 		{
 			String line=line(inStream);
-			File file = new File(file_name);
-			FileWriter fileWriter = new FileWriter (file,true);
-			PrintWriter out= new PrintWriter (fileWriter);
 			System.out.println(line);
-			out.close();	
 		}
 	}
 		

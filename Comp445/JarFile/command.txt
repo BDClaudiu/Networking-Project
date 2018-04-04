@@ -1,0 +1,5 @@
+java -jar C:/.......udp.jar
+
+1)
+port 3333
+Destination ip 192.168.0.196 (subnet mask: 255.255.255.0 default gateway:192.168.0.1)
